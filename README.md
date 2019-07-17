@@ -1,2 +1,4 @@
-# Tetris-Elba
-My first proper game in python using pygame in Python which will be a copy of Tetris
+# Keyboard Tetris
+My first proper game in python using pygame in 
+Python which will be a copy of Tetris using the 
+keyboard icons as sprites.
