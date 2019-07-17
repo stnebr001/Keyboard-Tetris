@@ -3,11 +3,6 @@ import pygame
 import sys
 import random
 
-# defining colours
-
-GREEN = (0, 204, 0)
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
 
 # initialising the screen
 
@@ -21,6 +16,18 @@ screen = pygame.display.set_mode([WIDTH, HEIGHT], pygame.RESIZABLE)
 # initialise pygame
 pygame.init()
 
+# defining colours
+
+GREEN = (0, 204, 0)
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+
+# defining fonts
+
+game_name_font = pygame.font.SysFont("monospace", min((HEIGHT // 18), (WIDTH // 23)))
+start_game_font = pygame.font.SysFont("monospace", min((HEIGHT // 18), (WIDTH // 23)))
+go_controls_font = pygame.font.SysFont("monospace", min((HEIGHT // 18), (WIDTH // 23)))
+
 # creating the start screen
 
 # variable that checks what screen we are on
@@ -28,11 +35,17 @@ start_screen = True
 # background colour
 BACKGROUND_COLOUR = BLACK
 # name of game
-start_text = "Keyboard Tetris"
-start_font = pygame.font.SysFont("monospace", min((HEIGHT // 18), (WIDTH // 23)))
-start_label = start_font.render(start_text, 1, GREEN)
-start_rect = start_label.get_rect(center=(WIDTH / 2, HEIGHT / 2))
-#
+game_name_text = "Keyboard Tetris"
+game_name_label = game_name_font.render(game_name_text, 1, GREEN)
+game_name_rect = game_name_label.get_rect(center=(WIDTH / 2, HEIGHT / 2))
+# how to go to the controls screen
+start_game_text = "Press [g] to start the game"
+start_game_label = start_game_font.render(start_game_text, 1, GREEN)
+start_game_rect = start_game_label.get_rect(center=(WIDTH / 2, HEIGHT / 2))
+# how to start the game
+go_controls_text = "Press [c] to go to the controls"
+go_controls_label = go_controls_font.render(go_controls_text, 1, GREEN)
+go_controls_rect = go_controls_label.get_rect(center=(WIDTH / 2, HEIGHT / 2))
 
 # creating the controls screen
 
@@ -75,7 +88,11 @@ while True:
                 # fill background
                 screen.fill(BACKGROUND_COLOUR)
                 # write the name of the game
-                screen.blit(start_label, start_rect)
+                screen.blit(game_name_label, game_name_rect)
+                # write how to start the game
+                screen.blit(start_game_label, start_game_rect)
+                # write how to go to the controls
+                screen.blit(go_controls_label, go_controls_rect)
                 # update the screen
                 pygame.display.update()
 
