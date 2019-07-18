@@ -33,24 +33,26 @@ go_controls_font = pygame.font.SysFont("monospace", min((HEIGHT // 18), (WIDTH /
 # variable that checks what screen we are on
 start_screen = True
 # background colour
-BACKGROUND_COLOUR = BLACK
+START_BACKGROUND_COLOUR = BLACK
 # name of game
 game_name_text = "Keyboard Tetris"
-game_name_label = game_name_font.render(game_name_text, 1, GREEN)
-game_name_rect = game_name_label.get_rect(center=(WIDTH / 2, HEIGHT / 2))
+game_name_label = game_name_font.render(game_name_text, 1, WHITE)
+game_name_rect = game_name_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 100))  # arbitrary positioning
 # how to go to the controls screen
 start_game_text = "Press [g] to start the game"
-start_game_label = start_game_font.render(start_game_text, 1, GREEN)
-start_game_rect = start_game_label.get_rect(center=(WIDTH / 2, HEIGHT / 2))
+start_game_label = start_game_font.render(start_game_text, 1, WHITE)
+start_game_rect = start_game_label.get_rect(center=(WIDTH / 2, HEIGHT / 2))  # arbitrary positioning
 # how to start the game
 go_controls_text = "Press [c] to go to the controls"
-go_controls_label = go_controls_font.render(go_controls_text, 1, GREEN)
-go_controls_rect = go_controls_label.get_rect(center=(WIDTH / 2, HEIGHT / 2))
+go_controls_label = go_controls_font.render(go_controls_text, 1, WHITE)
+go_controls_rect = go_controls_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 100))  # arbitrary positioning
 
 # creating the controls screen
 
 # variable that checks what screen we are on
 controls_screen = False
+# background colour
+CONTROLS_BACKGROUND_COLOUR = BLACK
 
 # creating the game screen
 
@@ -86,7 +88,7 @@ while True:
             # start screen
             if not controls_screen:
                 # fill background
-                screen.fill(BACKGROUND_COLOUR)
+                screen.fill(START_BACKGROUND_COLOUR)
                 # write the name of the game
                 screen.blit(game_name_label, game_name_rect)
                 # write how to start the game
@@ -98,7 +100,7 @@ while True:
 
             # controls screen
             if controls_screen:
-                screen.fill(GREEN)
+                screen.fill(CONTROLS_BACKGROUND_COLOUR)
                 pygame.display.update()
 
         # actual game screen
