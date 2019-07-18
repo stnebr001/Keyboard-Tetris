@@ -16,6 +16,15 @@ screen = pygame.display.set_mode([WIDTH, HEIGHT], pygame.RESIZABLE)
 # initialise pygame
 pygame.init()
 
+# initialising the background music
+
+# initialise mixer
+pygame.mixer.init()
+# load song
+pygame.mixer.music.load("DST-TowerDefenseTheme.mp3")
+# play and loop song indefinitely
+pygame.mixer.music.play(loops=-1)
+
 # defining colours
 
 BLACK = (0, 0, 0)
@@ -34,6 +43,7 @@ PINK = (255, 182, 193)
 game_name_font = pygame.font.SysFont("monospace", min((HEIGHT // 18), (WIDTH // 23)))
 start_game_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
 go_controls_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
+get_credits_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
 # controls screen
 controls_title_font = pygame.font.SysFont("monospace", min((HEIGHT // 18), (WIDTH // 23)))
 orientation_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
@@ -45,6 +55,11 @@ quit_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
 # pause screen
 unpause_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
 paused_restart_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
+# credits screen
+credits_font = pygame.font.SysFont("monospace", min((HEIGHT // 18), (WIDTH // 23)))
+developed_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
+audio_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
+get_start_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
 
 # creating the start screen
 
@@ -55,15 +70,19 @@ START_BACKGROUND_COLOUR = BLACK
 # name of game
 game_name_text = "Keyboard Tetris"
 game_name_label = game_name_font.render(game_name_text, 1, WHITE)
-game_name_rect = game_name_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 100))  # arbitrary positioning
+game_name_rect = game_name_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 200))  # arbitrary positioning
 # how to go to the controls screen
 start_game_text = "[g]: Start the game"
 start_game_label = start_game_font.render(start_game_text, 1, WHITE)
-start_game_rect = start_game_label.get_rect(center=(WIDTH / 2, HEIGHT / 2))  # arbitrary positioning
+start_game_rect = start_game_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 100))  # arbitrary positioning
 # how to start the game
 go_controls_text = "[c]: Controls"
 go_controls_label = go_controls_font.render(go_controls_text, 1, WHITE)
-go_controls_rect = go_controls_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 100))  # arbitrary positioning
+go_controls_rect = go_controls_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 50))  # arbitrary positioning
+# how to check credits
+get_credits_text = "[x]: Credits"
+get_credits_label = get_credits_font.render(get_credits_text, 1, WHITE)
+get_credits_rect = get_credits_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 50))  # arbitrary positioning
 
 # creating the controls screen
 
@@ -102,6 +121,7 @@ quit_rect = quit_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 100))  # arbitra
 
 # creating the pause screen
 # this will be almost identical to the controls screen
+
 # unpause the game
 unpause_text = "[p]: Unpause the game"
 unpause_label = unpause_font.render(unpause_text, 1, WHITE)
@@ -110,9 +130,31 @@ unpause_rect = unpause_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 100))  # a
 paused_restart_text = "[r]: Restart the game"
 paused_restart_label = paused_restart_font.render(paused_restart_text, 1, WHITE)
 paused_restart_rect = paused_restart_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 50))  # arbitrary positioning
-
 # variable that checks what screen we are on
 pause_screen = False
+
+# creating the credits screen
+
+# variable that checks what screen we are on
+credits_screen = False
+# background colour
+CREDITS_BACKGROUND_COLOUR = BLACK
+# credits title
+credits_text = "Credits"
+credits_label = credits_font.render(credits_text, 1, WHITE)
+credits_rect = credits_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 200))  # arbitrary positioning
+# game made by Ebrahim Steenkamp
+developed_text = "Developed by Ebrahim Steenkamp"
+developed_label = developed_font.render(developed_text, 1, WHITE)
+developed_rect = developed_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 100))  # arbitrary positioning
+# audio produce by DST
+audio_text = "Audio by DST"
+audio_label = audio_font.render(audio_text, 1, WHITE)
+audio_rect = audio_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 50))  # arbitrary positioning
+# go to start screen
+get_start_text = "[x]: Start screen"
+get_start_label = get_start_font.render(get_start_text, 1, WHITE)
+get_start_rect = get_start_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 50))  # arbitrary positioning
 
 # creating the game screen
 
@@ -184,6 +226,9 @@ while True:
             # checking for controls screen
             if event.key == pygame.K_c:
                 controls_screen = not controls_screen
+            # checking for credits screen
+            if event.key == pygame.K_x:
+                credits_screen = not credits_screen
             # checking to see if the actual game needs to start
             if event.key == pygame.K_g:
                 start_screen = False
@@ -196,7 +241,7 @@ while True:
     if start_screen:
 
         # start screen
-        if not controls_screen:
+        if not controls_screen and not credits_screen:
             # fill background
             screen.fill(START_BACKGROUND_COLOUR)
             # write the name of the game
@@ -205,6 +250,23 @@ while True:
             screen.blit(start_game_label, start_game_rect)
             # write how to go to the controls
             screen.blit(go_controls_label, go_controls_rect)
+            # write how to go to the credits screen
+            screen.blit(get_credits_label, get_credits_rect)
+            # update the screen
+            pygame.display.update()
+
+        # credits screen
+        if not controls_screen and credits_screen:
+            # fill background
+            screen.fill(CREDITS_BACKGROUND_COLOUR)
+            # write credits text
+            screen.blit(credits_label, credits_rect)
+            # write developed text
+            screen.blit(developed_label, developed_rect)
+            # write audio text
+            screen.blit(audio_label, audio_rect)
+            # write how to get to start text
+            screen.blit(get_start_label, get_start_rect)
             # update the screen
             pygame.display.update()
 
