@@ -32,11 +32,13 @@ go_controls_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH /
 controls_title_font = pygame.font.SysFont("monospace", min((HEIGHT // 18), (WIDTH // 23)))
 orientation_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
 pause_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
+restart_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
 g_start_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
 back_start_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
 quit_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
 # pause screen
 unpause_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
+paused_restart_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
 
 # creating the start screen
 
@@ -74,26 +76,34 @@ orientation_rect = orientation_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 15
 # pause when in-game
 pause_text = "[p]: Pause when in-game"
 pause_label = pause_font.render(pause_text, 1, WHITE)
-pause_rect = pause_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 50))  # arbitrary positioning
+pause_rect = pause_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 100))  # arbitrary positioning
+# restart when in-game
+restart_text = "[r]: Restart the game when in-game"
+restart_label = restart_font.render(restart_text, 1, WHITE)
+restart_rect = restart_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 50))  # arbitrary positioning
 # start game
 g_start_text = "[g]: Start the game"
 g_start_label = g_start_font.render(g_start_text, 1, WHITE)
-g_start_rect = g_start_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 50))  # arbitrary positioning
+g_start_rect = g_start_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 ))  # arbitrary positioning
 # back to start screen
 back_start_text = "[c]: Go back to the Start screen"
 back_start_label = back_start_font.render(back_start_text, 1, WHITE)
-back_start_rect = back_start_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 150))  # arbitrary positioning
+back_start_rect = back_start_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 50))  # arbitrary positioning
 # quit the game
 quit_text = "[esc]: Quit the game"
 quit_label = quit_font.render(quit_text, 1, WHITE)
-quit_rect = quit_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 250))  # arbitrary positioning
+quit_rect = quit_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 100))  # arbitrary positioning
 
 # creating the pause screen
 # this will be almost identical to the controls screen
-# quit the game
+# unpause the game
 unpause_text = "[p]: Unpause the game"
 unpause_label = unpause_font.render(unpause_text, 1, WHITE)
-unpause_rect = unpause_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 50))  # arbitrary positioning
+unpause_rect = unpause_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 100))  # arbitrary positioning
+# restart when in-game
+paused_restart_text = "[r]: Restart the game"
+paused_restart_label = paused_restart_font.render(paused_restart_text, 1, WHITE)
+paused_restart_rect = paused_restart_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 50))  # arbitrary positioning
 
 # variable that checks what screen we are on
 pause_screen = False
@@ -150,12 +160,14 @@ while True:
         if controls_screen:
             # fill background
             screen.fill(CONTROLS_BACKGROUND_COLOUR)
-            # write the controls title
+            # write controls title
             screen.blit(controls_title_label, controls_title_rect)
-            # write the orientation text
+            # write orientation text
             screen.blit(orientation_label, orientation_rect)
-            # write the pause text
+            # write pause text
             screen.blit(pause_label, pause_rect)
+            # write restart text
+            screen.blit(restart_label, restart_rect)
             # write start game text
             screen.blit(g_start_label, g_start_rect)
             # write back to the start text
@@ -177,13 +189,15 @@ while True:
         if pause_screen:
             # fill background
             screen.fill(CONTROLS_BACKGROUND_COLOUR)
-            # write the controls title
+            # write controls title
             screen.blit(controls_title_label, controls_title_rect)
-            # write the orientation text
+            # write orientation text
             screen.blit(orientation_label, orientation_rect)
-            # write the unpause text
+            # write unpause text
             screen.blit(unpause_label, unpause_rect)
-            # write the quit text
+            # write restart text
+            screen.blit(paused_restart_label, paused_restart_rect)
+            # write quit text
             screen.blit(quit_label, quit_rect)
             # update the screen
             pygame.display.update()
