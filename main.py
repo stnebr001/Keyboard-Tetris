@@ -18,9 +18,9 @@ pygame.init()
 
 # defining colours
 
-GREEN = (0, 204, 0)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+
 
 # defining fonts
 
@@ -113,6 +113,52 @@ pause_screen = False
 # variable that checks what screen we are on
 game_screen = False
 
+# how many blocks should make up the height of the tetris game
+height_amount = 22
+# how many blocks should make up the width of the tetris game
+width_amount = 12
+# block dimensions
+block_size = int(min(WIDTH / width_amount, HEIGHT / height_amount))
+
+
+# creating the Block class for re-use
+class Block:
+
+    # initial properties of class
+    def __init__(self, x, y, colour, block_size):
+        # finding dimensions of blocks
+        self.block_outer = block_size
+        self.block_inner = int(block_size * 0.98)
+        self.block_diff = self.block_outer - self.block_inner
+        # border colour
+        self.border = WHITE
+        # block colour
+        self.colour = colour
+        # x top of the block
+        self.x = x
+        # y top of the block
+        self.y = y
+
+    # drawing the block with its border
+    def draw(self):
+        pygame.draw.rect(screen, self.border, [self.x, self.y, self.x + self.block_outer, self.y + self.block_outer])
+        pygame.draw.rect(screen, self.colour, [self.x + self.block_diff, self.y + self.block_diff,
+                                               self.x + self.block_outer - self.block_diff,
+                                               self.y + self.block_outer - self.block_diff])
+
+
+# drawing the border of the game
+def draw_border(width_amount, height_amount, block_size):
+    for idx_1 in range(height_amount - 1):
+        for idx_2 in [0, 11]:
+            block = Block(idx_2 * block_size, idx_1 * block_size, BLACK, block_size)
+            block.draw()
+    else:
+        for idx_2 in range(width_amount):
+            block = Block(idx_2 * block_size, idx_1 * block_size, BLACK, block_size)
+            block.draw()
+
+
 # starting the game
 
 while True:
@@ -182,7 +228,9 @@ while True:
 
         # game screen
         if not pause_screen:
-            screen.fill(WHITE)
+            screen.fill(BLACK)
+
+            draw_border(width_amount, height_amount, block_size)
             pygame.display.update()
 
         # pause screen
