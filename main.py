@@ -24,6 +24,8 @@ pygame.mixer.init()
 pygame.mixer.music.load("DST-TowerDefenseTheme.mp3")
 # play and loop song indefinitely
 pygame.mixer.music.play(loops=-1)
+# checking if music should be paused
+pause_music = False
 
 # defining colours
 
@@ -50,6 +52,8 @@ orientation_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH /
 pause_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
 restart_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
 g_start_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
+pause_music_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
+unpause_music_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
 back_start_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
 quit_font = pygame.font.SysFont("monospace", min((HEIGHT // 25), (WIDTH // 30)))
 # pause screen
@@ -110,14 +114,22 @@ restart_rect = restart_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 50))  # ar
 g_start_text = "[g]: Start the game"
 g_start_label = g_start_font.render(g_start_text, 1, WHITE)
 g_start_rect = g_start_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 ))  # arbitrary positioning
+# pause the music
+pause_music_text = "[q]: Pause music"
+pause_music_label = pause_music_font.render(pause_music_text, 1, WHITE)
+pause_music_rect = pause_music_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 50))  # arbitrary positioning
+# unpause the music
+unpause_music_text = "[q]: Unpause music"
+unpause_music_label = unpause_music_font.render(unpause_music_text, 1, WHITE)
+unpause_music_rect = unpause_music_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 50))  # arbitrary positioning
 # back to start screen
 back_start_text = "[c]: Go back to the Start screen"
 back_start_label = back_start_font.render(back_start_text, 1, WHITE)
-back_start_rect = back_start_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 50))  # arbitrary positioning
+back_start_rect = back_start_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 100))  # arbitrary positioning
 # quit the game
 quit_text = "[esc]: Quit the game"
 quit_label = quit_font.render(quit_text, 1, WHITE)
-quit_rect = quit_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 100))  # arbitrary positioning
+quit_rect = quit_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 150))  # arbitrary positioning
 
 # creating the pause screen
 # this will be almost identical to the controls screen
@@ -223,12 +235,23 @@ while True:
             # exiting program is escape is pressed
             if event.key == pygame.K_ESCAPE:
                 sys.exit()
+            # pausing the music
+            if event.key == pygame.K_q:
+                pause_music = not pause_music
+                if pause_music:
+                    pygame.mixer.music.pause()
+                else:
+                    pygame.mixer.music.unpause()
             # checking for controls screen
             if event.key == pygame.K_c:
-                controls_screen = not controls_screen
+                if start_screen:
+                    if not credits_screen:
+                        controls_screen = not controls_screen
             # checking for credits screen
             if event.key == pygame.K_x:
-                credits_screen = not credits_screen
+                if start_screen:
+                    if not controls_screen:
+                        credits_screen = not credits_screen
             # checking to see if the actual game needs to start
             if event.key == pygame.K_g:
                 start_screen = False
@@ -284,6 +307,14 @@ while True:
             screen.blit(restart_label, restart_rect)
             # write start game text
             screen.blit(g_start_label, g_start_rect)
+
+            if not pause_music:
+                # pause music text
+                screen.blit(pause_music_label, pause_music_rect)
+            else:
+                # unpause music text
+                screen.blit(unpause_music_label, unpause_music_rect)
+
             # write back to the start text
             screen.blit(back_start_label, back_start_rect)
             # write the quit text
@@ -313,6 +344,14 @@ while True:
             screen.blit(unpause_label, unpause_rect)
             # write restart text
             screen.blit(paused_restart_label, paused_restart_rect)
+
+            if not pause_music:
+                # pause music text
+                screen.blit(pause_music_label, pause_music_rect)
+            else:
+                # unpause music text
+                screen.blit(unpause_music_label, unpause_music_rect)
+
             # write quit text
             screen.blit(quit_label, quit_rect)
             # update the screen
