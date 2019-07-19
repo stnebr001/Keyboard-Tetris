@@ -560,6 +560,47 @@ def draw_border(width_amount, height_amount, block_size):
             block.draw()
 
 
+# creating the player block for re-use
+class PlayerBlock:
+
+    def __init__(self, block_size):
+        self.choice = random.choice(["Z", "S", "I", "O", "L", "J", "T"])
+        self.orientation = "left"
+        self.block = None
+        self.block_size = block_size
+
+    def assign_block(self):
+        if self.choice == "Z":
+            x = random.randint(1, 8)
+            self.block = Zblock(x * block_size, 0, self.block_size)
+        if self.choice == "S":
+            x = random.randint(1, 8)
+            self.block = Sblock(x * block_size, 0, self.block_size)
+        if self.choice == "I":
+            x = random.randint(1, 7)
+            self.block = Iblock(x * block_size, 0, self.block_size)
+        if self.choice == "O":
+            x = random.randint(1, 9)
+            self.block = Oblock(x * block_size, 0, self.block_size)
+        if self.choice == "L":
+            x = random.randint(1, 7)
+            self.block = Lblock(x * block_size, block_size, self.block_size)
+        if self.choice == "J":
+            x = random.randint(1, 7)
+            self.block = Jblock(x * block_size, 0, self.block_size)
+        if self.choice == "T":
+            x = random.randint(1, 9)
+            self.block = Tblock(x * block_size, 0, self.block_size)
+        return self.block
+
+    def draw(self):
+        block = self.assign_block()
+        block.orient(self.orientation)
+
+
+
+
+
 # starting the game
 
 while True:
@@ -601,6 +642,17 @@ while True:
             if event.key == pygame.K_p:
                 if game_screen:
                     pause_screen = not pause_screen
+
+            if game_screen and not pause_screen:
+                # checking directional arrows
+                if event.key == pygame.K_UP:
+                    print("up")
+                if event.key == pygame.K_DOWN:
+                    print("down")
+                if event.key == pygame.K_LEFT:
+                    print("left")
+                if event.key == pygame.K_RIGHT:
+                    print("right")
 
     if start_screen:
 
@@ -647,6 +699,10 @@ while True:
             screen.fill(GAME_BACKGROUND_COLOUR)
 
             draw_border(width_amount, height_amount, block_size)
+
+            if random.random() < 0.05:
+                PlayerBlock(block_size).draw()
+
 
         # pause screen
         if pause_screen:
