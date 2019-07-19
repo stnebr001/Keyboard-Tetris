@@ -11,7 +11,7 @@ import random
 os.environ["SDL_VIDEO_CENTERED"] = "1"
 # default screen values
 WIDTH = 800
-HEIGHT = 600
+HEIGHT = 594
 # making a resizable screen
 screen = pygame.display.set_mode([WIDTH, HEIGHT], pygame.RESIZABLE)
 # initialise pygame
@@ -24,7 +24,7 @@ pygame.mixer.init()
 # load song
 pygame.mixer.music.load("DST-TowerDefenseTheme.mp3")
 # play and loop song indefinitely
-pygame.mixer.music.play(loops=-1)
+#pygame.mixer.music.play(loops=-1)  # disabled music since i listen to music while working
 # checking if music should be paused
 pause_music = False
 
@@ -38,7 +38,7 @@ LIGHT_BLUE = (0, 255, 255)
 DARK_BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
-PINK = (255, 182, 193)
+PINK = (255, 20, 147)
 GREY = (128, 128, 128)
 
 # defining fonts
@@ -193,7 +193,7 @@ class Block:
         self.block_inner = block_size * 0.98
         self.block_diff = math.ceil(self.block_outer - self.block_inner)
         # border colour
-        self.border = WHITE
+        self.border = BLACK
         # block colour
         self.colour = colour
         # x top of the block
@@ -227,6 +227,334 @@ def draw_border(width_amount, height_amount, block_size):
             block = Block(col * block_size, (height_amount - 1) * block_size, GREY, block_size)
             # draw the block
             block.draw()
+
+
+# creating the Z-block class for re-use
+class Zblock:
+
+    def __init__(self, x, y, block_size):
+        self.x = x
+        self.y = y
+        self.block_size = block_size
+        self.colour = LIGHT_BLUE
+
+    def left(self):
+        block = Block(self.x, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + 2 * self.block_size, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+
+    def up(self):
+        block = Block(self.x + self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x, self.y + 2 * self.block_size, self.colour, self.block_size)
+        block.draw()
+
+    def orient(self, orientation):
+        if orientation == "left" or orientation == "right":
+            self.left()
+        else:
+            self.up()
+
+
+# creating the S-block class for re-use
+class Sblock:
+
+    def __init__(self, x, y, block_size):
+        self.x = x
+        self.y = y
+        self.block_size = block_size
+        self.colour = ORANGE
+
+    def left(self):
+        block = Block(self.x, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + 2 * self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+
+    def up(self):
+        block = Block(self.x, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y + 2 * self.block_size, self.colour, self.block_size)
+        block.draw()
+
+    def orient(self, orientation):
+        if orientation == "left" or orientation == "right":
+            self.left()
+        else:
+            self.up()
+
+
+# creating the I-block class for re-use
+class Iblock:
+
+    def __init__(self, x, y, block_size):
+        self.x = x
+        self.y = y
+        self.block_size = block_size
+        self.colour = RED
+
+    def left(self):
+        block = Block(self.x, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + 2 * self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + 3 * self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+
+    def up(self):
+        block = Block(self.x, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x, self.y + 2 * self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x, self.y + 3 * self.block_size, self.colour, self.block_size)
+        block.draw()
+
+    def orient(self, orientation):
+        if orientation == "left" or orientation == "right":
+            self.left()
+        elif orientation == "up" or orientation == "down":
+            self.up()
+
+
+# creating the O-block class for re-use
+class Oblock:
+
+    def __init__(self, x, y, block_size):
+        self.x = x
+        self.y = y
+        self.block_size = block_size
+        self.colour = GREEN
+
+    def left(self):
+        block = Block(self.x, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+
+    def orient(self, orientation):
+        if orientation == "left" or orientation == "right" or orientation == "up" or orientation == "down":
+            self.left()
+
+
+# creating the L-block class for re-use
+class Lblock:
+
+    def __init__(self, x, y, block_size):
+        self.x = x
+        self.y = y
+        self.block_size = block_size
+        self.colour = PINK
+
+    def left(self):
+        block = Block(self.x, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + 2 * self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + 3 * self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + 3 * self.block_size, self.y - self.block_size, self.colour, self.block_size)
+        block.draw()
+
+    def up(self):
+        block = Block(self.x, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x, self.y + 2 * self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x, self.y + 3 * self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y + 3 * self.block_size, self.colour, self.block_size)
+        block.draw()
+
+    def right(self):
+        block = Block(self.x, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + 2 * self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + 3 * self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+
+    def down(self):
+        block = Block(self.x, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x, self.y + 2 * self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x, self.y + 3 * self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x - self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+
+    def orient(self, orientation):
+        if orientation == "left":
+            self.left()
+        elif orientation == "right":
+            self.right()
+        elif orientation == "up":
+            self.up()
+        elif orientation == "down":
+            self.down()
+
+
+# creating the J-block class for re-use
+class Jblock:
+
+    def __init__(self, x, y, block_size):
+        self.x = x
+        self.y = y
+        self.block_size = block_size
+        self.colour = YELLOW
+
+    def left(self):
+        block = Block(self.x, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + 2 * self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + 3 * self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + 3 * self.block_size, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+
+    def up(self):
+        block = Block(self.x, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x, self.y + 2 * self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x, self.y + 3 * self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x - self.block_size, self.y + 3 * self.block_size, self.colour, self.block_size)
+        block.draw()
+
+    def right(self):
+        block = Block(self.x, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + 2 * self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + 3 * self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x, self.y - self.block_size, self.colour, self.block_size)
+        block.draw()
+
+    def down(self):
+        block = Block(self.x, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x, self.y + 2 * self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x, self.y + 3 * self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+
+    def orient(self, orientation):
+        if orientation == "left":
+            self.left()
+        elif orientation == "right":
+            self.right()
+        elif orientation == "up":
+            self.up()
+        elif orientation == "down":
+            self.down()
+
+
+# creating the T-block class for re-use
+class Tblock:
+
+    def __init__(self, x, y, block_size):
+        self.x = x
+        self.y = y
+        self.block_size = block_size
+        self.colour = DARK_BLUE
+
+    def left(self):
+        block = Block(self.x, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y + 2 * self.block_size, self.colour, self.block_size)
+        block.draw()
+
+    def up(self):
+        block = Block(self.x, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + 2 * self.block_size, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+
+    def right(self):
+        block = Block(self.x + 2 * self.block_size, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y + 2 * self.block_size, self.colour, self.block_size)
+        block.draw()
+
+    def down(self):
+        block = Block(self.x, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y + 2 * self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + self.block_size, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+        block = Block(self.x + 2 * self.block_size, self.y + self.block_size, self.colour, self.block_size)
+        block.draw()
+
+    def orient(self, orientation):
+        if orientation == "left":
+            self.left()
+        elif orientation == "right":
+            self.right()
+        elif orientation == "up":
+            self.up()
+        elif orientation == "down":
+            self.down()
 
 
 # starting the game
@@ -340,6 +668,22 @@ while True:
             screen.fill(BLACK)
 
             draw_border(width_amount, height_amount, block_size)
+
+            z = Tblock(90, 90, block_size)
+            z.orient("up")
+            z = Lblock(180, 90, block_size)
+            z.orient("up")
+            z = Jblock(90, 180, block_size)
+            z.orient("up")
+            z = Iblock(180, 270, block_size)
+            z.orient("up")
+            z = Sblock(90, 360, block_size)
+            z.orient("up")
+            z = Zblock(180, 450, block_size)
+            z.orient("up")
+            z = Oblock(90, 450, block_size)
+            z.orient("up")
+
             pygame.display.update()
 
         # pause screen
