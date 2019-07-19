@@ -115,7 +115,7 @@ restart_rect = restart_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 50))  # ar
 # start game
 g_start_text = "[g]: Start the game"
 g_start_label = g_start_font.render(g_start_text, 1, WHITE)
-g_start_rect = g_start_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 ))  # arbitrary positioning
+g_start_rect = g_start_label.get_rect(center=(WIDTH / 2, HEIGHT / 2))  # arbitrary positioning
 # pause the music
 pause_music_text = "[q]: Pause music"
 pause_music_label = pause_music_font.render(pause_music_text, 1, WHITE)
@@ -146,6 +146,8 @@ paused_restart_label = paused_restart_font.render(paused_restart_text, 1, WHITE)
 paused_restart_rect = paused_restart_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 50))  # arbitrary positioning
 # variable that checks what screen we are on
 pause_screen = False
+# background colour
+PAUSE_BACKGROUND_COLOUR = BLACK
 
 # creating the credits screen
 
@@ -174,7 +176,8 @@ get_start_rect = get_start_label.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 50))  
 
 # variable that checks what screen we are on
 game_screen = False
-
+# game background colour
+GAME_BACKGROUND_COLOUR = BLACK
 # how many blocks should make up the height of the tetris game
 height_amount = 22
 # how many blocks should make up the width of the tetris game
@@ -207,26 +210,6 @@ class Block:
         pygame.draw.rect(screen, self.colour, [self.x + self.block_diff, self.y + self.block_diff,
                                                self.block_outer - 2 * self.block_diff,
                                                self.block_outer - 2 * self.block_diff])
-
-
-# drawing the border of the game
-def draw_border(width_amount, height_amount, block_size):
-    # for each row in the border besides the last
-    for row in range(height_amount - 1):
-        # for each side of the border
-        for col in [0, width_amount - 1]:
-            # create the block
-            block = Block(col * block_size, row * block_size, GREY, block_size)
-            # draw the block
-            block.draw()
-    # for the last row in the border
-    else:
-        # for every block in the last row
-        for col in range(width_amount):
-            # create the block
-            block = Block(col * block_size, (height_amount - 1) * block_size, GREY, block_size)
-            # draw the block
-            block.draw()
 
 
 # creating the Z-block class for re-use
@@ -557,6 +540,26 @@ class Tblock:
             self.down()
 
 
+# drawing the border of the game
+def draw_border(width_amount, height_amount, block_size):
+    # for each row in the border besides the last
+    for row in range(height_amount - 1):
+        # for each side of the border
+        for col in [0, width_amount - 1]:
+            # create the block
+            block = Block(col * block_size, row * block_size, GREY, block_size)
+            # draw the block
+            block.draw()
+    # for the last row in the border
+    else:
+        # for every block in the last row
+        for col in range(width_amount):
+            # create the block
+            block = Block(col * block_size, (height_amount - 1) * block_size, GREY, block_size)
+            # draw the block
+            block.draw()
+
+
 # starting the game
 
 while True:
@@ -605,46 +608,29 @@ while True:
         if not controls_screen and not credits_screen:
             # fill background
             screen.fill(START_BACKGROUND_COLOUR)
-            # write the name of the game
-            screen.blit(game_name_label, game_name_rect)
-            # write how to start the game
-            screen.blit(start_game_label, start_game_rect)
-            # write how to go to the controls
-            screen.blit(go_controls_label, go_controls_rect)
-            # write how to go to the credits screen
-            screen.blit(get_credits_label, get_credits_rect)
-            # update the screen
-            pygame.display.update()
+            # writing text
+            for i, j in [[game_name_label, game_name_rect], [start_game_label, start_game_rect],
+                         [go_controls_label, go_controls_rect], [get_credits_label, get_credits_rect]]:
+                screen.blit(i, j)
 
         # credits screen
         if not controls_screen and credits_screen:
             # fill background
             screen.fill(CREDITS_BACKGROUND_COLOUR)
-            # write credits text
-            screen.blit(credits_label, credits_rect)
-            # write developed text
-            screen.blit(developed_label, developed_rect)
-            # write audio text
-            screen.blit(audio_label, audio_rect)
-            # write how to get to start text
-            screen.blit(get_start_label, get_start_rect)
-            # update the screen
-            pygame.display.update()
+            # writing text to screen
+            for i, j in [[credits_label, credits_rect], [developed_label, developed_rect], [audio_label, audio_rect],
+                         [get_start_label, get_start_rect]]:
+                screen.blit(i, j)
 
         # controls screen
         if controls_screen:
             # fill background
             screen.fill(CONTROLS_BACKGROUND_COLOUR)
-            # write controls title
-            screen.blit(controls_title_label, controls_title_rect)
-            # write orientation text
-            screen.blit(orientation_label, orientation_rect)
-            # write pause text
-            screen.blit(pause_label, pause_rect)
-            # write restart text
-            screen.blit(restart_label, restart_rect)
-            # write start game text
-            screen.blit(g_start_label, g_start_rect)
+            # writing text
+            for i, j in [[controls_title_label, controls_title_rect], [orientation_label, orientation_rect],
+                         [pause_label, pause_rect], [restart_label, restart_rect], [g_start_label, g_start_rect],
+                         [back_start_label, back_start_rect], [quit_label, quit_rect]]:
+                screen.blit(i, j)
 
             if not pause_music:
                 # pause music text
@@ -652,52 +638,25 @@ while True:
             else:
                 # unpause music text
                 screen.blit(unpause_music_label, unpause_music_rect)
-
-            # write back to the start text
-            screen.blit(back_start_label, back_start_rect)
-            # write the quit text
-            screen.blit(quit_label, quit_rect)
-            # update the screen
-            pygame.display.update()
 
     # actually playing the game
     elif game_screen:
 
         # game screen
         if not pause_screen:
-            screen.fill(BLACK)
+            screen.fill(GAME_BACKGROUND_COLOUR)
 
             draw_border(width_amount, height_amount, block_size)
-
-            z = Tblock(90, 90, block_size)
-            z.orient("up")
-            z = Lblock(180, 90, block_size)
-            z.orient("up")
-            z = Jblock(90, 180, block_size)
-            z.orient("up")
-            z = Iblock(180, 270, block_size)
-            z.orient("up")
-            z = Sblock(90, 360, block_size)
-            z.orient("up")
-            z = Zblock(180, 450, block_size)
-            z.orient("up")
-            z = Oblock(90, 450, block_size)
-            z.orient("up")
-
-            pygame.display.update()
 
         # pause screen
         if pause_screen:
             # fill background
-            screen.fill(CONTROLS_BACKGROUND_COLOUR)
-            # write controls title
-            screen.blit(controls_title_label, controls_title_rect)
-            # write orientation text
-            screen.blit(orientation_label, orientation_rect)
-            # write unpause text
-            screen.blit(unpause_label, unpause_rect)
-            # write restart text
-            screen.blit(paused_restart_label, paused_restart_rect)
+            screen.fill(PAUSE_BACKGROUND_COLOUR)
+            # writing text
+            for i, j in [[controls_title_label, controls_title_rect], [orientation_label, orientation_rect],
+                         [unpause_label, unpause_rect], [paused_restart_label, paused_restart_rect],
+                         [quit_label, quit_rect]]:
+                screen.blit(i, j)
 
             if not pause_music:
                 # pause music text
@@ -706,7 +665,5 @@ while True:
                 # unpause music text
                 screen.blit(unpause_music_label, unpause_music_rect)
 
-            # write quit text
-            screen.blit(quit_label, quit_rect)
-            # update the screen
-            pygame.display.update()
+    # update the screen
+    pygame.display.update()
