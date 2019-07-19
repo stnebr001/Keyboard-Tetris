@@ -1,6 +1,7 @@
 import os
 import pygame
 import sys
+import math
 import random
 
 
@@ -38,6 +39,7 @@ DARK_BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 PINK = (255, 182, 193)
+GREY = (128, 128, 128)
 
 # defining fonts
 
@@ -178,7 +180,7 @@ height_amount = 22
 # how many blocks should make up the width of the tetris game
 width_amount = 12
 # block dimensions
-block_size = int(min(WIDTH / width_amount, HEIGHT / height_amount))
+block_size = math.floor(min(WIDTH / width_amount, HEIGHT / height_amount))
 
 
 # creating the Block class for re-use
@@ -188,8 +190,8 @@ class Block:
     def __init__(self, x, y, colour, block_size):
         # finding dimensions of blocks
         self.block_outer = block_size
-        self.block_inner = int(block_size * 0.98)
-        self.block_diff = self.block_outer - self.block_inner
+        self.block_inner = block_size * 0.98
+        self.block_diff = math.ceil(self.block_outer - self.block_inner)
         # border colour
         self.border = WHITE
         # block colour
@@ -201,21 +203,29 @@ class Block:
 
     # drawing the block with its border
     def draw(self):
-        pygame.draw.rect(screen, self.border, [self.x, self.y, self.x + self.block_outer, self.y + self.block_outer])
+        pygame.draw.rect(screen, self.border, [self.x, self.y, self.block_outer, self.block_outer])
         pygame.draw.rect(screen, self.colour, [self.x + self.block_diff, self.y + self.block_diff,
-                                               self.x + self.block_outer - self.block_diff,
-                                               self.y + self.block_outer - self.block_diff])
+                                               self.block_outer - 2 * self.block_diff,
+                                               self.block_outer - 2 * self.block_diff])
 
 
 # drawing the border of the game
 def draw_border(width_amount, height_amount, block_size):
-    for idx_1 in range(height_amount - 1):
-        for idx_2 in [0, 11]:
-            block = Block(idx_2 * block_size, idx_1 * block_size, BLACK, block_size)
+    # for each row in the border besides the last
+    for row in range(height_amount - 1):
+        # for each side of the border
+        for col in [0, width_amount - 1]:
+            # create the block
+            block = Block(col * block_size, row * block_size, GREY, block_size)
+            # draw the block
             block.draw()
+    # for the last row in the border
     else:
-        for idx_2 in range(width_amount):
-            block = Block(idx_2 * block_size, idx_1 * block_size, BLACK, block_size)
+        # for every block in the last row
+        for col in range(width_amount):
+            # create the block
+            block = Block(col * block_size, (height_amount - 1) * block_size, GREY, block_size)
+            # draw the block
             block.draw()
 
 
